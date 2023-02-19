@@ -61,7 +61,8 @@
     box-shadow: 0 0 1px 0 black;
 }
 
-.search-btn{
+.search-btn,
+.btn{
     padding: 10px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     outline: none;
@@ -70,7 +71,8 @@
     background: none;
 }
 
-.search-btn:hover {
+.search-btn:hover,
+.btn:hover {
     cursor: pointer;
     border-color: rgb(44, 44, 44);
     box-shadow: 0 0 1px 0 black;
@@ -118,4 +120,5 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
     background-color: rgb(245, 245, 245);
+    margin-bottom: 20px;
 }

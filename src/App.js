@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 import {Header}  from "./components/Header"
 import Body from "./components/Body"
 import * as Obj from "./components/Footer"
-
+import Shimmer from "./components/Shimmer"
 const AppLayout = () => {
     return (
         <>

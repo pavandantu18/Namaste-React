@@ -1,21 +1,39 @@
 import RestaurantCard from "./RestaurantCard"
 import { restaurantList } from "../constants"
-import { useState } from "react"
-  // no key (not acceptable)<<<<<<<<<<< index key(last option) <<<<< unquie key (best practice)
+import { useState, useEffect } from "react"
+import Shimmer from "./Shimmer.js"
 
 function filterData(searchTxt,restaurants) {
     const data = restaurants.filter((restaurant) => 
-        restaurant.data.name.includes(searchTxt)
+        restaurant?.data?.name?.toLowerCase().includes(searchTxt.toLowerCase())
 )
     return data
 }
 
+// no key (not acceptable)<<<<<<<<<<< index key(last option) <<<<< unquie key (best practice)
 const Body = () => {
-
+    
     const [searchTxt,setSearchTxt] = useState("")
+    const [allRestaurants, setAllRestaurants] = useState([])
+    const [filteredRestaurants,setFilteredRestaurants] = useState([])
 
-    const [restaurants,setRestaurants] = useState(restaurantList)
-    return (
+    useEffect(() => {
+        // API call
+        getRestaurants()
+    },[])
+
+    async function getRestaurants() {
+        const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING")
+        const json = await data.json()
+        console.log(json);
+        setAllRestaurants(json?.data?.cards[2]?.data?.data?.cards)
+        setFilteredRestaurants(json?.data?.cards[2]?.data?.data?.cards)
+    }
+
+    // not render component (Early)
+    if(!allRestaurants) return null
+    
+    return (allRestaurants.length === 0) ? <Shimmer /> :(
         <>
             <div className="search-container">
                 <input 
@@ -28,15 +46,15 @@ const Body = () => {
                 className="search-btn"
                 onClick={() => {
                     // need to filter the data
-                    const data = filterData(searchTxt,restaurants)
-                    setRestaurants(data)
+                    const data = filterData(searchTxt,allRestaurants)
+                    setFilteredRestaurants(data)
                 }}>
                     Search
                 </button>
             </div>
             <div className="restaurant-list">
-                {
-                    restaurants.map(restaurant => {
+                {   filteredRestaurants?.length === 0 ? <h1>No restaurant is found with the filter</h1> :
+                    filteredRestaurants.map(restaurant => {
                         return <RestaurantCard {...restaurant.data} key = {restaurant.data.id} />
                     })
                 }
